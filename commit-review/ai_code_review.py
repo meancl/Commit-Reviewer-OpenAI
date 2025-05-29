@@ -84,7 +84,7 @@ def main():
     print("\n [OpenAI 응답 결과]")
     print(result)
     
-    return 0 # 커밋 중단
+    sys.exit(1) # 0 -> 커밋 진행 
 
 
 if __name__ == "__main__":
