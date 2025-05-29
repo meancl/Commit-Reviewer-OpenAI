@@ -1,0 +1,11 @@
+#!/bin/bash
+# commit -msg 훅
+
+.venv/Scripts/python .githooks/ai_code_review.py
+
+if [ $? -ne 0 ]; then
+  echo "커밋이 중단되었습니다."
+  exit 1
+fi
+
+exit 0
