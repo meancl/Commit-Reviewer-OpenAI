@@ -6,8 +6,15 @@ echo "커밋 리뷰 환경 설정을 시작합니다..."
 LOCAL_ROOT=$(pwd)                       # /your-project-root/commit-review
 PROJECT_ROOT=$(dirname "$LOCAL_ROOT") # /your-project-root
 
-mv -f "$LOCAL_ROOT/.gitignore" "$PROJECT_ROOT/.gitignore"
-echo ".gitignore를 이동했습니다."
+if [ -f "$PROJECT_ROOT/.gitignore" ]; then
+    echo "" >> "$PROJECT_ROOT/.gitignore"
+    cat "$LOCAL_ROOT/.gitignore" >> "$PROJECT_ROOT/.gitignore"
+    rm -f "$LOCAL_ROOT/.gitignore"
+    echo ".gitignore를 덧붙여 썻습니다."
+else
+    mv -f "$LOCAL_ROOT/.gitignore" "$PROJECT_ROOT/.gitignore"
+    echo ".gitignore를 이동했습니다."
+fi
 
 mkdir -p "$PROJECT_ROOT/.githooks"
 echo ".githooks 디렉토리를 생성했습니다."
@@ -30,6 +37,7 @@ fi
 source "$PROJECT_ROOT/.venv/Scripts/activate"
 echo "requirements.txt로 패키지 설치 중..."
 pip install -r "$LOCAL_ROOT/requirements.txt"
+rm -f "$LOCAL_ROOT/requirements.txt"
 
 if [ ! -f "$PROJECT_ROOT/.env" ]; then
   echo ".env 파일 생성 중..."
