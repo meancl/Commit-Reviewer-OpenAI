@@ -1,0 +1,2 @@
+python ~/.global-bin/mc_project/main.py "$@"
+
