@@ -4,6 +4,7 @@ AI 기반 커밋 메시지 및 코드 리뷰 자동화 도구입니다.
 OpenAI GPT 모델을 활용하여 Git 커밋 시점에 커밋 메시지와 스테이지된 코드 변경 사항을 분석하고, 품질 향상을 위한 리뷰를 제공합니다.
 
 ## 폴더 구조
+```
 mc_project
 ├── ai_git_assistant
 │   ├── dir_tree_builder.py
@@ -16,7 +17,7 @@ mc_project
 │   └── spinner_utils.py
 ├── main.py
 └── .gitignore
-
+```
 ## 설치 방법
 1. OpenAI API 키를 발급받아 준비합니다.
 2. 터미널에서 아래 명령어로 설치 스크립트를 실행합니다
