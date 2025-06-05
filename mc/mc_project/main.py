@@ -2,9 +2,9 @@ import argparse
 
 import sys, io
 
+from ai_git_assistant.ai_client_provider import get_ai_provider
 from ai_git_assistant.prompt_builder import build_prompt
 from ai_git_assistant.system_messages import init_openai_system_message
-from ai_git_assistant.openai_client import call_openai
 from ui_assistant.spinner_utils import Spinner
 
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
@@ -36,10 +36,11 @@ def main():
         if args.request_confirm: 
             display_contents += f"[ **system message** ]\n{system_msg}\n\n[ **prompt message** ]\n{prompt}" 
         else:
-            result = call_openai(system_msg, prompt)
+            client = get_ai_provider()
+            result = client.chat(system_msg, prompt)
             display_contents += f"\n[OpenAI 응답 결과]\n\n{result}"
-    except Exception:
-        print("\n오류로 인해 프로그램 중단")
+    except Exception as e:
+        print(f"\n오류로 인해 프로그램 중단\n오류 메시지 : {e}")
     finally:
         spinner.stop()
         print(display_contents)
