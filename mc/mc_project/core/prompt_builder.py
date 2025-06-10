@@ -1,7 +1,7 @@
-from .git_utils import get_diff, get_commit_show, get_recent_commit_messages
-from ai_git_assistant.git_project_finder import find_cur_directory, find_git_directory
-from path_assistant.dir_tree_builder import get_directory_structure_tree
-from path_assistant.file_reader import get_files_content
+from git_utils.git_commands import get_diff, get_commit_show, get_recent_commit_messages
+from git_utils.git_project_finder import find_cur_directory, find_git_directory
+from fs.tree_builder import get_directory_structure_tree
+from fs.file_loader import get_files_content
 
 def append_prompt_message(args) -> str:
     prompt_messages = []
@@ -17,7 +17,6 @@ def append_prompt_message(args) -> str:
         include_hidden = False
         if args.include_hidden:
             include_hidden = True
-        #root = change_to_git_root()
         root = find_cur_directory()
         prompt_messages.append(get_directory_structure_tree(root, include_hidden=include_hidden))
 

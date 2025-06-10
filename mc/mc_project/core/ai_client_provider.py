@@ -1,4 +1,4 @@
-from ai_git_assistant.openai_client import OpenAiClient
+from core.openai_client import OpenAiClient
 
 def get_ai_provider(provider_name:str = 'openai'):
         if provider_name == 'openai':
