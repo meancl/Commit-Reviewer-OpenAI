@@ -36,6 +36,7 @@ def main():
     parser.add_argument("-H", "--include_hidden", action="store_true", help="including hidden files")
     parser.add_argument("-c", "--include_context", type=int, nargs='?', default=argparse.SUPPRESS, const=None, help="including context messages")
     parser.add_argument("-x", "--exclude_save_context", action="store_true", help="excluding saving context message")
+    parser.add_argument("-M", "--model", type=str, default='openai', choices=["openai", "gemini"], help="setting ai model")
     parser.add_argument("message", type=str, default="", nargs='?', help="message or question for ai")
 
     args = parser.parse_args()  
@@ -57,9 +58,9 @@ def main():
             if contexts:
                 display_contents += f"\n\n[ **contexts** ]\n{contexts}"
         else:
-            client = get_ai_provider()
+            client = get_ai_provider(args.model)
             result = client.chat(system_msg, prompt, contexts=contexts)
-            display_contents += f"\n[OpenAI 응답 결과]\n\n{result}"
+            display_contents += f"\n[AI 응답 결과]\n\n{result}"
             if not args.exclude_save_context:
                 save_context_message("user", prompt)
                 save_context_message("assistant", result)

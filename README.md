@@ -76,6 +76,12 @@ mc
 | gq     | git_question              | Git 관련 질문 응답           |
 | gen    | general                   | 일반 질문 응답               |
 
+## 모델 설명
+| 옵션                         | 설명                                                                 |
+|----------------------------|----------------------------------------------------------------------|
+| model_provider             | 사용할 모델 제공자 설정 (`openai` 또는 `gemini`)                      |
+| model_name                 | 사용할 모델 이름. 기본값은 `gpt-4o-mini` (openai), `gemini-1.5-flash` (gemini) |
+
 ```bash
 # 예시
 mc -m cmr --log 5

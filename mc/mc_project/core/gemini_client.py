@@ -1,0 +1,45 @@
+import os
+from core.ai_client import AiClient
+
+class GeminiClient(AiClient):
+    def __init__(self, model: str = 'gemini-1.5-flash', temperature: float = 0.3):
+        import google.generativeai as genai
+        from dotenv import load_dotenv
+        load_dotenv()
+        self.API_KEY = os.getenv("GOOGLE_API_KEY")
+        if not self.API_KEY:
+            raise ValueError("GOOGLE_API_KEY 환경 변수가 설정되지 않았습니다.")
+        self.genai = genai
+        self.genai.configure(api_key=self.API_KEY)
+        self.model_name = model
+        self.temperature = temperature
+        self.model = self.genai.GenerativeModel(self.model_name)
+
+    def chat(self, system_msg: str, prompt: str, contexts:list=[]) -> str:
+        print('gemini거 맞아')
+        full_prompt = f"{system_msg}\n\n{prompt}"
+        generation_config = self.genai.GenerationConfig(temperature=self.temperature)
+        if contexts:
+            contexts = self.convert_to_gemini_context(contexts)
+            chat_session = self.model.start_chat(history=contexts)
+            response = chat_session.send_message(full_prompt,
+                                                 generation_config=generation_config)
+        else:
+            response = self.model.generate_content(full_prompt,
+                                                  generation_config=generation_config)
+        return response.text.strip()
+    
+    def convert_to_gemini_context(self, messages:str) -> str:
+        converted = []
+        for msg in messages:
+            role = msg.get("role")
+            content = msg.get("content")
+
+            if role == "assistant":
+                role = "model"
+            
+            converted.append({
+                "role": role,
+                "parts": [content]
+            })  
+        return converted
