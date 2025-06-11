@@ -37,6 +37,7 @@ def main():
     parser.add_argument("-c", "--include_context", type=int, nargs='?', default=argparse.SUPPRESS, const=None, help="including context messages")
     parser.add_argument("-x", "--exclude_save_context", action="store_true", help="excluding saving context message")
     parser.add_argument("-M", "--model", type=str, default='openai', choices=["openai", "gemini"], help="setting ai model")
+    parser.add_argument("-S", "--exclude_stream", action="store_true", help="make stream off")
     parser.add_argument("message", type=str, default="", nargs='?', help="message or question for ai")
 
     args = parser.parse_args()  
@@ -49,18 +50,26 @@ def main():
 
         system_msg = init_openai_system_message()[args.mode]
         prompt = build_prompt(args)
+
         if hasattr(args, "include_context"):
             contexts = load_context_messages(args.include_context)
         else:
             contexts = [] 
+
         if args.request_confirm: 
             display_contents += f"[ **system message** ]\n{system_msg}\n\n[ **prompt message** ]\n{prompt}" 
             if contexts:
                 display_contents += f"\n\n[ **contexts** ]\n{contexts}"
         else:
             client = get_ai_provider(args.model)
-            result = client.chat(system_msg, prompt, contexts=contexts)
-            display_contents += f"\n[AI 응답 결과]\n\n{result}"
+            if not args.exclude_stream: 
+                spinner.stop() 
+                print("[AI 응답 결과]\n\n")
+                result = client.chat(system_msg, prompt, contexts=contexts)
+            else:                
+                result = client.chat(system_msg, prompt, contexts=contexts, stream=False)
+                display_contents += f"\n[AI 응답 결과]\n\n{result}"
+
             if not args.exclude_save_context:
                 save_context_message("user", prompt)
                 save_context_message("assistant", result)

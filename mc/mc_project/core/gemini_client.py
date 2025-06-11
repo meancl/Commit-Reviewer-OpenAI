@@ -15,19 +15,36 @@ class GeminiClient(AiClient):
         self.temperature = temperature
         self.model = self.genai.GenerativeModel(self.model_name)
 
-    def chat(self, system_msg: str, prompt: str, contexts:list=[]) -> str:
-        print('gemini거 맞아')
+    def chat(self, system_msg: str, prompt: str, contexts:list=[], stream:bool=True) -> str:
         full_prompt = f"{system_msg}\n\n{prompt}"
         generation_config = self.genai.GenerationConfig(temperature=self.temperature)
-        if contexts:
+        
+        result = ""
+
+        if contexts: 
             contexts = self.convert_to_gemini_context(contexts)
             chat_session = self.model.start_chat(history=contexts)
-            response = chat_session.send_message(full_prompt,
-                                                 generation_config=generation_config)
-        else:
-            response = self.model.generate_content(full_prompt,
-                                                  generation_config=generation_config)
-        return response.text.strip()
+            if stream:
+                response_stream = chat_session.send_message(full_prompt, generation_config=generation_config, stream=True)
+            else:
+                response = chat_session.send_message(full_prompt, generation_config=generation_config)
+                return response.text.strip()
+        else: 
+            if stream: 
+                response_stream = self.model.generate_content(full_prompt, generation_config=generation_config, stream=True)
+            else:
+                response = self.model.generate_content(full_prompt, generation_config=generation_config)
+                return response.text.strip()
+            
+        # if stream == True 공통처리리
+        for chunk in response_stream:
+            for part in chunk.parts:
+                print(part.text, end="", flush=True)
+                result += part.text
+
+        return result.strip()
+    
+        
     
     def convert_to_gemini_context(self, messages:str) -> str:
         converted = []

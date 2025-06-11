@@ -8,8 +8,9 @@ class OpenAiClient(AiClient):
         self.client = OpenAI()
         self.model = model
         self.temperature = temperature
+        
 
-    def chat(self, system_msg: str, prompt: str, contexts:list=[]) -> str:
+    def chat(self, system_msg: str, prompt: str, contexts:list=[], stream:bool=True) -> str:
         
         ai_request = []
 
@@ -25,5 +26,16 @@ class OpenAiClient(AiClient):
             model = self.model,
             messages = ai_request,
             temperature = self.temperature,
+            stream = stream
         )
-        return response.choices[0].message.content.strip()
+
+        if stream:
+            result = ""
+            for chunk in response:
+                content = chunk.choices[0].delta.content or ""
+                print(content, end="", flush=True)  # 실시간 출력
+                result += content
+            print() 
+            return result.strip()
+        else:
+            return response.choices[0].message.content.strip()
