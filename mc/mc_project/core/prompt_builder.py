@@ -1,7 +1,5 @@
-from git_utils.git_commands import get_diff, get_commit_show, get_recent_commit_messages
-from git_utils.git_project_finder import find_cur_directory, find_git_directory
-from fs.tree_builder import get_directory_structure_tree
-from fs.file_loader import get_files_content
+from git_utils import *
+from fs import get_directory_structure_tree, get_files_content
 
 def append_prompt_message(args) -> str:
     prompt_messages = []

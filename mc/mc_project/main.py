@@ -2,10 +2,8 @@ import argparse
 
 import sys, io
 
-from core.ai_client_provider import get_ai_provider
-from core.prompt_builder import build_prompt
-from core.system_messages import init_openai_system_message
-from fs.context_manager import save_context_message, load_context_messages
+from core import get_ai_provider, build_prompt, init_openai_system_message
+from fs import save_context_message, load_context_messages
 from ui.spinner import Spinner
 
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
@@ -36,7 +34,7 @@ def main():
     parser.add_argument("-H", "--include_hidden", action="store_true", help="including hidden files")
     parser.add_argument("-c", "--include_context", type=int, nargs='?', default=argparse.SUPPRESS, const=None, help="including context messages")
     parser.add_argument("-x", "--exclude_save_context", action="store_true", help="excluding saving context message")
-    parser.add_argument("-M", "--model", type=str, default='openai', choices=["openai", "gemini"], help="setting ai model")
+    parser.add_argument("-M", "--model", type=str, default='openai', choices=["openai", "gemini", "llama"], help="setting ai model")
     parser.add_argument("-S", "--exclude_stream", action="store_true", help="make stream off")
     parser.add_argument("message", type=str, default="", nargs='?', help="message or question for ai")
 

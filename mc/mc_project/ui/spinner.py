@@ -2,7 +2,6 @@
 
 import threading
 import sys
-import time
 
 class Spinner:
     def __init__(self, msg="처리중입니다", interval=0.5, done_msg="작업 완료!"):

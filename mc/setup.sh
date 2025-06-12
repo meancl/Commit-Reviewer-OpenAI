@@ -30,8 +30,9 @@ fi
 echo ".env 파일 생성 중..."
 cat <<EOF > "$GLOBAL_BIN/$ENV_FILE"
 # 환경 변수는 여기에 정의하세요
-OPENAI_API_KEY=your_openai_key_here
-GOOGLE_API_KEY=your_google_key_here
+OPENAI_API_KEY=your_openai_key_here for openai
+GOOGLE_API_KEY=your_google_key_here for gemini
+TOGETHER_API_KEY=your_together_key_here for llama
 EOF
 
 pip install -r "$LOCAL_ROOT/requirements.txt"
