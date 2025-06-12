@@ -69,6 +69,7 @@ mc
 | -s, --show                | git show 옵션 지정                                   |
 | -d, --diff                | git diff 옵션 지정                                   |
 | -f, --file                | 파일 경로 입력                                       |
+| -i, --image                | 이미지 경로 입력                                       |
 | -D, --directory           | 디렉토리 트리 구조 표시                              |
 | -r, --request_confirm     | AI 프롬프트 확인 메시지 표시                         |
 | -H, --include_hidden      | 숨김 파일 포함 여부                                  |

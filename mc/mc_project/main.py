@@ -28,7 +28,8 @@ def main():
     parser.add_argument("-l", "--log", type=int, nargs='?', const=3, help="log number")
     parser.add_argument("-s", "--show", type=str, nargs='?', const='HEAD', help= "show option")
     parser.add_argument("-d", "--diff", type=str, nargs='?', const="--cached", help="diff option")
-    parser.add_argument("-f", "--file", type=str, help="file path")
+    parser.add_argument("-f", "--file", type=str, help="file paths seperated by space")
+    parser.add_argument("-i", "--image", type=str, default=None, help="image paths seperated by space")
     parser.add_argument("-D", "--directory", action="store_true", help="directory tree structure")
     parser.add_argument("-r", "--request_confirm", action="store_true", help="show ai request message for confirm")
     parser.add_argument("-H", "--include_hidden", action="store_true", help="including hidden files")
@@ -40,7 +41,7 @@ def main():
 
     args = parser.parse_args()  
     args.mode = MODE_MAP[args.mode]
-    
+  
     spinner = Spinner()
     display_contents = ""
     try:
@@ -58,14 +59,17 @@ def main():
             display_contents += f"[ **system message** ]\n{system_msg}\n\n[ **prompt message** ]\n{prompt}" 
             if contexts:
                 display_contents += f"\n\n[ **contexts** ]\n{contexts}"
+            if args.image:
+                image_paths = '\n'.join(args.image.strip().split())
+                display_contents += f"\n[ **image_paths** ]\n{image_paths}"    
         else:
             client = get_ai_provider(args.model)
             if not args.exclude_stream: 
                 spinner.stop() 
                 print("[AI 응답 결과]\n\n")
-                result = client.chat(system_msg, prompt, contexts=contexts)
+                result = client.chat(system_msg, prompt, contexts=contexts, images=args.image)
             else:                
-                result = client.chat(system_msg, prompt, contexts=contexts, stream=False)
+                result = client.chat(system_msg, prompt, contexts=contexts, stream=False, images=args.image)
                 display_contents += f"\n[AI 응답 결과]\n\n{result}"
 
             if not args.exclude_save_context:
